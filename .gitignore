@@ -1,0 +1,4 @@
+.env 
+.vscode
+data/
+firebase_settings.json

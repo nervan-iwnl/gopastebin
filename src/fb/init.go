@@ -20,17 +20,17 @@ func InitFirebaseApp() error {
 	var err error
 	storageClient, err = storage.NewClient(ctx, opt)
 	if err != nil {
-		return fmt.Errorf("ошибка инициализации клиента Firebase Storage: %v", err)
+		return fmt.Errorf("firebase Storage client initialization error: %v", err)
 	}
 
 	bucketName := os.Getenv("FIREBASE_BUCKET_NAME")
 	if bucketName == "" {
-		return fmt.Errorf("имя бакета не указано в .env файле")
+		return fmt.Errorf("bucket name is not specified in the .env file")
 	}
 
 	bucket = storageClient.Bucket(bucketName)
 	if bucket == nil {
-		return fmt.Errorf("ошибка получения бакета %s", bucketName)
+		return fmt.Errorf("error receiving the bucket %s", bucketName)
 	}
 
 	return nil

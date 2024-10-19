@@ -10,7 +10,7 @@ func UploadFileToFirebase(userID string, path string, fileContent string) (strin
 	ctx := context.Background()
 
 	if storageClient == nil {
-		return "", fmt.Errorf("клиент Firebase Storage не инициализирован")
+		return "", fmt.Errorf("the Firebase Storage client is not initialized")
 	}
 
 	storagePath := fmt.Sprintf("%s/%s.txt", userID, path)
@@ -19,11 +19,11 @@ func UploadFileToFirebase(userID string, path string, fileContent string) (strin
 	writer := obj.NewWriter(ctx)
 
 	if _, err := io.WriteString(writer, fileContent); err != nil {
-		return "", fmt.Errorf("ошибка записи файла: %v", err)
+		return "", fmt.Errorf("file recording error: %v", err)
 	}
 
 	if err := writer.Close(); err != nil {
-		return "", fmt.Errorf("ошибка закрытия writer: %v", err)
+		return "", fmt.Errorf("error closing writer: %v", err)
 	}
 
 	return storagePath, nil

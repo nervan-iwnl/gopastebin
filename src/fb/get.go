@@ -10,7 +10,7 @@ func GetFileFromFirebase(userID string, path string) (string, error) {
 	ctx := context.Background()
 
 	if storageClient == nil {
-		return "", fmt.Errorf("клиент Firebase Storage не инициализирован")
+		return "", fmt.Errorf("firebase Storage client has not been initialized")
 	}
 
 	storagePath := fmt.Sprintf("%s/%s.txt", userID, path)
@@ -19,13 +19,13 @@ func GetFileFromFirebase(userID string, path string) (string, error) {
 
 	reader, err := obj.NewReader(ctx)
 	if err != nil {
-		return "", fmt.Errorf("ошибка создания reader для файла: %v", err)
+		return "", fmt.Errorf("error creating a reader for a file: %v", err)
 	}
 	defer reader.Close() 
 
 	data, err := io.ReadAll(reader)
 	if err != nil {
-		return "", fmt.Errorf("ошибка чтения файла: %v", err)
+		return "", fmt.Errorf("file reading error: %v", err)
 	}
 
 

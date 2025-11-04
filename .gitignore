@@ -1,4 +1,4 @@
-.env 
-.vscode
+.env
 data/
 firebase_settings.json
+vendor/

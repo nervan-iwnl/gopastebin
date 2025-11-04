@@ -1,23 +1,24 @@
-FROM golang:1.23-alpine
+FROM golang:1.24-bookworm
 
 WORKDIR /app
 
-RUN apk add --no-cache curl bash
-
-ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
+# копируем модули и vendor внутрь
 COPY go.mod go.sum ./
+COPY vendor ./vendor
 
-ENV GOTOOLCHAIN=auto
+# говорим го не ходить в интернет, а юзать vendor
+ENV GO111MODULE=on
+ENV GOPROXY=off
+ENV GONOSUMDB=*
+ENV GOMODCACHE=/app/vendor
 
-RUN go mod download
-RUN go mod tidy
-
+# копируем весь остальной код
 COPY . .
 
-RUN go build -o app .
+# билдим
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=vendor -o server ./cmd/server
+
+RUN mkdir -p /app/storage-data
 
 EXPOSE 8080
-
-CMD ["/wait-for-it.sh", "postgres:5432", "--", "./app"]
+CMD ["/app/server"]

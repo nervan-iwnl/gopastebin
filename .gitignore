@@ -1,5 +1,5 @@
-.env
-data/
-firebase_settings.json
-vendor/
-storage-data/
+backend/.env
+backend/secrets/firebase_admin.json
+backend/vendor/
+backend/storage-data/
+frontend/.env

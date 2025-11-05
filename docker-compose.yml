@@ -12,17 +12,34 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: gopastebin_app
     depends_on:
       - db
     env_file:
-      - .env
+      - backend/.env
     ports:
       - "8080:8080"
     volumes:
-      - ./storage-data:/app/storage-data
-      - ./firebase_settings.json:/app/firebase_settings.json:ro
+      # локальные файлы паст
+      - ./backend/storage-data:/app/storage-data
+      # сервисный ключ firebase (на хосте должен лежать frontend… нет, BACKEND/secrets/firebase-admin.json)
+      - ./backend/secrets/firebase-admin.json:/app/secrets/firebase-admin.json:ro
+    restart: on-failure
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+      - VITE_API_BASE=http://localhost:8080/api/v1
+    container_name: gopastebin_frontend
+    depends_on:
+      - app
+    ports:
+      - "5173:80"
     restart: on-failure
 
 volumes:
